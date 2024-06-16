@@ -23,7 +23,7 @@
 </head>
 
 <body class="hold-transition login-page">
-    <div class="login-box" style="width: auto;">
+    <div class="login-box" style="width: 25rem;">
         <!-- login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">

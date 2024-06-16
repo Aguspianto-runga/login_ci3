@@ -88,8 +88,8 @@
                             <div class="card-footer">
                                 <center>
                                     <p class="card-text">
-                                        Selamat datang <b><?= $user['name']; ?></b> 
-                                        <!-- Mengubah role_id jadi admin/user  -->
+                                        Selamat datang <b><?= $user['name']; ?></b>
+                                        <!-- Mengubah role_id dari '1/2' menjadi 'admin/user'  -->
                                             (<?php
                                                 if ($user['role_id'] == 1) {
                                                     echo('admin');

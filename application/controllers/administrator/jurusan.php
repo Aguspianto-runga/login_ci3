@@ -77,7 +77,7 @@ class Jurusan extends CI_Controller{
         $data['jurusan'] = $this->jurusan_model->edit_data($where, 'jurusan')->result();
         $this->load->view('templates_administrator/header', $judul);
         $this->load->view('templates_administrator/sidebar', $user);
-        $this->load->view('administrator/jurusan_update', $data);
+        $this->load->view('admin/jurusan_update', $data);
         $this->load->view('templates_administrator/footer');
     }
 

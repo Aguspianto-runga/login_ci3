@@ -5,12 +5,13 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1><?= $title; ?></h1>
+                            <h1><i class="fas fa-book-open"></i> <?= $title; ?></h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active"><?= $title; ?></li>
+                                <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active"><?= $title; ?></li> -->
+                                <li class="breadcrumb-item active"><i class="fas fa-calendar-alt"></i> <?= date('d F Y'); ?></li>
                             </ol>
                         </div>
                     </div>
@@ -26,7 +27,7 @@
 
 
 
-                <?= $this->session->flashdata('pesan'); ?>
+                <?= $this->session->flashdata('message'); ?>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
@@ -109,47 +110,63 @@
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Data</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="<?= base_url('admin/matakuliah'); ?>" method="post">
+                <form action="<?= base_url('admin/tambah_matakuliah_aksi'); ?>" method="post">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="">Kode</label>
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                                <input type="text" name="kode_matakuliah" class="form-control" id="menu" placeholder="Menu name" required>
+                                <input type="text" name="kode_matakuliah" class="form-control" id="menu" placeholder="Kode matakuliah" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="">Matakuliah</label>
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><i class="fas fa-book-open"></i></span>
-                                <input type="text" name="nama_matakuliah" class="form-control" id="menu" placeholder="Menu name" required>
+                                <input type="text" name="nama_matakuliah" class="form-control" id="menu" placeholder="Nama matakuliah" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="">SKS</label>
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
-                                <input type="text" name="sks" class="form-control" id="menu" placeholder="Menu name" required>
+                                <input type="text" name="sks" class="form-control" id="menu" placeholder="SKS" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="">Semester</label>
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                                <input type="text" name="semester" class="form-control" id="menu" placeholder="Menu name" required>
+                                <!-- <input type="text" name="semester" class="form-control" id="menu" placeholder="Menu name" required> -->
+                                <select class="custom-select" name="semester">
+                                    <option value="">Pilih Semester</option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                    <option value="">3</option>
+                                    <option value="">4</option>
+                                    <option value="">5</option>
+                                    <option value="">6</option>
+                                    <option value="">7</option>
+                                    <option value="">8</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="">Jurusan</label>
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                                <input type="text" name="nama_jurusan" class="form-control" id="menu" placeholder="Menu name" required>
+                                <!-- <input type="text" name="nama_jurusan" class="form-control" id="menu" placeholder="Menu name" required> -->
+                                <select class="custom-select" name="nama_jurusan">
+                                    <option value="">Pilih Jurusan</option>
+                                    <?php foreach ($jurusan as $jrs) : ?>
+                                        <option value="<?php echo $jrs->nama_jurusan ?>"><?php echo $jrs->nama_jurusan; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
-                        <!-- <a href="<?= base_url('menu/') ?>" class="btn btn-outline-danger">Back</a> -->
                     </div>
                 </form>
             </div>

@@ -5,12 +5,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1><?= $title; ?></h1>
+                        <h1><i class="fas fa-home"></i> <?= $title; ?></h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active"><?= $title; ?></li>
+                            <!-- <li class="breadcrumb-item"><a href="#">H</a></li>
+                            <li class="breadcrumb-item active"><?= $title; ?></li> -->
+                            <li class="breadcrumb-item active"> <i class="fas fa-calendar-alt"></i> <?= date('d F Y'); ?></li>
                         </ol>
                     </div>
                 </div>
@@ -110,7 +111,13 @@
                             <div class="card-body">
                                 <div class="tab-content p-0">
                                     <p class="card-text">
-                                        Selamat datang <b><?= $user['name']; ?></b>, Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                        Selamat datang <b><?= $user['name']; ?></b>, Anda login sebagai 
+                                        <b><?php 
+                                            if ($user['role_id'] == 1) {
+                                                    echo('admin');} 
+                                                else {
+                                                    echo('user');}
+                                        ?></b> Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                         Amet totam incidunt consequuntur et, adipisci optio,
                                         quidem veniam est quasi laboriosam magnam, dignissimos at
                                         eaque sint distinctio sapiente iure reiciendis laborum.

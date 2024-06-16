@@ -22,6 +22,8 @@ class User extends CI_Controller
         $data['jumlah_mahasiswa'] = $this->mahasiswa_model->getJumlahMahasiswa();
         $data['jumlah_jurusan'] = $this->jurusan_model->getJumlahJurusan();
         $data['jumlah_matkul'] = $this->matakuliah_model->getJumlahMatkul();
+        // $data2['menu'] = $this->db->get_where('user_menu', ['menu' => $this->session->userdata('menu')])->row_array();        
+        $data['menu'] = $this->db->get('user_menu')->result_array();
         
         $this->load->view('template/header', $data);
         $this->load->view('user/home', $data);
