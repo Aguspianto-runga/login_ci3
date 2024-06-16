@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class User extends CI_Controller 
+class Menu extends CI_Controller 
 {
 
     public function __construct()
@@ -15,53 +15,20 @@ class User extends CI_Controller
 
     public function index()
     {
-        $data['title'] = 'Home';
+        $data['title'] = 'Menu Manajemen';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();        
         $data['user_role'] = $this->db->get_where('user_role', ['role' => $this->session->userdata('role')])->row_array();        
-        $data['jurusan'] = $this->mahasiswa_model->tampil_data('jurusan')->result();
-        $data['jumlah_mahasiswa'] = $this->mahasiswa_model->getJumlahMahasiswa();
-        $data['jumlah_jurusan'] = $this->jurusan_model->getJumlahJurusan();
-        $data['jumlah_matkul'] = $this->matakuliah_model->getJumlahMatkul();
-        // $data2['menu'] = $this->db->get_where('user_menu', ['menu' => $this->session->userdata('menu')])->row_array();        
         $data['menu'] = $this->db->get('user_menu')->result_array();
+
+        $this->form_validation->set_rules('menu', 'Menu', 'required');
         
-        $this->load->view('template/header', $data);
-        $this->load->view('user/home', $data);
-        $this->load->view('template/footer');
-    }
-
-    public function profile()
-    {
-        $data['title'] = 'My Profile';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();        
-        $data['user_role'] = $this->db->get_where('user_role', ['role' => $this->session->userdata('role')])->row_array();        
-
-        $this->load->view('template/header', $data);
-        $this->load->view('user/index', $data);
-        $this->load->view('template/footer');
-    }
-
-    public function edit()
-    {
-        $data['title'] = 'Edit Profile';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();        
-        $data['user_role'] = $this->db->get_where('user_role', ['role' => $this->session->userdata('role')])->row_array();        
-
-        $this->form_validation->set_rules('name', 'Name', 'required|trim');
-
-        if($this->form_validation->run() == false) {
+        if ($this->form_validation->run() == false){
             $this->load->view('template/header', $data);
-            $this->load->view('user/user_edit', $data);
+            $this->load->view('menu/index', $data);
             $this->load->view('template/footer');
-        } else{
-            $name = $this->input->post('name');
-            $email = $this->input->post('email');
-
-            $this->db->set('name', $name);
-            $this->db->where('email', $email);
-            $this->db->update('user');
-            
-            $this->session->set_flashdata('pesan', '<div class="bs-toast toast toast-placement-ex m-2 fade bg-success top-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+        } else {
+            $this->db->insert('user_menu', ['menu' => $this->input->post('menu')]);
+            $this->session->set_flashdata('message', '<div class="bs-toast toast toast-placement-ex m-2 fade bg-success top-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
                                                         <div class="toast-header">
                                                             <div class="me-auto fw-semibold">
                                                                 <i class="fas fa-bell"></i>
@@ -71,50 +38,153 @@ class User extends CI_Controller
                                                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                                                         </div>
                                                         <div class="toast-body">
-                                                                Data berhasil diubah.
+                                                                Data berhasil ditambah.
                                                             </div>
-                                                    </div>');
-                                                redirect('user');
-            }
+                                                            </div>');
+                                                            redirect('menu');
+        }
+
     }
 
-    public function mahasiswa()
+    public function submenu()
     {
-        $data['title'] = 'Data Mahasiswa';
+        $data['title'] = 'Submenu Manajemen';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();        
         $data['user_role'] = $this->db->get_where('user_role', ['role' => $this->session->userdata('role')])->row_array();        
-        
-        $data['jurusan'] = $this->jurusan_model->tampil_data()->result();
-        $data['mahasiswa'] = $this->mahasiswa_model->tampil_data('mahasiswa')->result();
-        $data['jurusan'] = $this->mahasiswa_model->tampil_data('jurusan')->result();
-        
-        $this->load->view('template/header', $data);
-        $this->load->view('user/mahasiswa', $data);
-        $this->load->view('template/footer');
-    }
-
-    public function detail($id)
-    {
-        $data['title'] = 'Detail Mahasiswa';
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();        
-        $data['user_role'] = $this->db->get_where('user_role', ['role' => $this->session->userdata('role')])->row_array();        
-        $data['mahasiswa'] = $this->mahasiswa_model->ambil_id_mahasiswa($id);
         $data['menu'] = $this->db->get('user_menu')->result_array();
-
-        $this->load->view('template/header', $data);
-        $this->load->view('user/mahasiswa_detail', $data);
-        $this->load->view('template/footer');
+        $this->load->model('Menu_model', 'menu');
+        $data['subMenu'] = $this->menu->getSubMenu();
+        
+        $this->form_validation->set_rules('title', 'Title', 'required');
+        $this->form_validation->set_rules('menu_id', 'Menu', 'required');
+        $this->form_validation->set_rules('url', 'URL', 'required');
+        $this->form_validation->set_rules('icon', 'Icon', 'required');
+        
+        if ($this->form_validation->run() == false){
+            $this->load->view('template/header', $data);
+            $this->load->view('menu/submenu', $data);
+            $this->load->view('template/footer');
+        } else{
+            $data = 
+            [
+                'title' => $this->input->post('title'),
+                'menu_id' => $this->input->post('menu_id'),
+                'url' => $this->input->post('url'),
+                'icon' => $this->input->post('icon'),
+                'is_active' => $this->input->post('is_active')
+            ];
+            $this->db->insert('user_sub_menu', $data);
+            $this->session->set_flashdata('message', '<div class="bs-toast toast toast-placement-ex m-2 fade bg-success top-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+                                                            <div class="toast-header">
+                                                                <div class="me-auto fw-semibold">
+                                                                    <i class="fas fa-bell"></i>
+                                                                    Pemberitahuan
+                                                                </div>
+                                                                    <small>1 mins ago</small>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="toast-body">
+                                                                    Data berhasil ditambah.
+                                                                </div>
+                                                        </div>');
+                redirect('menu/submenu');
+        }
     }
 
-    public function changePassword()
+    public function edit_submenu($id)
     {
-        $data['title'] = 'Change Password';
+        $data['title'] = 'Edit Submenu';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();        
         $data['user_role'] = $this->db->get_where('user_role', ['role' => $this->session->userdata('role')])->row_array();        
+        $data['menu'] = $this->db->get('user_menu')->result_array();
+        $data['submenu'] = $this->db->get_where('user_sub_menu', ['id' => $id])->result_array();
+        $this->load->model('Menu_model', 'menu');
+        $data['subMenu'] = $this->menu->getSubMenu();
 
         $this->load->view('template/header', $data);
-        $this->load->view('user/changepassword', $data);
+        $this->load->view('menu/edit_submenu', $data);
         $this->load->view('template/footer');
     }
-}
 
+    public function edit_submenu_aksi()
+    {
+        $id = $this->input->post('id');
+        $menu_id = $this->input->post('menu_id');
+        $title = $this->input->post('title');
+        $url = $this->input->post('url');
+        $icon = $this->input->post('icon');
+
+        $data = array(
+            'menu_id' => $menu_id,
+            'title' => $title,
+            'url' => $url,
+            'icon' => $icon
+        );
+
+        $where = array(
+            'id' => $id
+        );
+
+        $this->menu_model->update_data($where, $data, 'user_sub_menu');
+        /*$this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible"
+                                                                role=""alert><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                                    <i class="icon fas fa-check m-auto"></i> Data <strong>Mahasiswa</strong> berhasil diubah!
+                                                            </div>');*/
+        $this->session->set_flashdata('pesan', '<div class="bs-toast toast toast-placement-ex m-2 fade bg-info top-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+                                                                <div class="toast-header">
+                                                                    <div class="me-auto fw-semibold">
+                                                                        <i class="fas fa-bell"></i>
+                                                                        Pemberitahuan
+                                                                    </div>
+                                                                        <small>1 mins ago</small>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="toast-body">
+                                                                        Data berhasil diubah.
+                                                                    </div>
+                                                            </div>');
+        redirect('menu/submenu');
+    }
+
+    public function delete($id)
+    {
+        $where = array('id' => $id);
+        $this->menu_model->hapus_data($where, 'user_menu');
+        $this->session->set_flashdata('pesan', '<div class="bs-toast toast toast-placement-ex m-2 fade bg-danger top-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+                                                    <div class="toast-header">
+                                                        <div class="me-auto fw-semibold">
+                                                            <i class="fas fa-bell"></i>
+                                                            Pemberitahuan
+                                                        </div>
+                                                            <small>1 mins ago</small>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="toast-body">
+                                                            Data berhasil dihapus.
+                                                        </div>
+                                                </div>');
+        redirect('menu');
+    }
+
+    public function delete_submenu($id)
+    {
+        $where = array('id' => $id);
+        $this->menu_model->hapus_data($where, 'user_sub_menu');
+        $this->session->set_flashdata('pesan', '<div class="bs-toast toast toast-placement-ex m-2 fade bg-danger top-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+                                                    <div class="toast-header">
+                                                        <div class="me-auto fw-semibold">
+                                                            <i class="fas fa-bell"></i>
+                                                            Pemberitahuan
+                                                        </div>
+                                                            <small>1 mins ago</small>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="toast-body">
+                                                            Data berhasil dihapus.
+                                                        </div>
+                                                </div>');
+        redirect('menu/submenu');
+    }
+
+}
