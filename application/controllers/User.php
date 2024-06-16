@@ -116,8 +116,5 @@ class User extends CI_Controller
         $this->load->view('user/changepassword', $data);
         $this->load->view('template/footer');
     }
-
-
-
 }
 
