@@ -190,7 +190,6 @@ class Admin extends CI_Controller
         $data['mahasiswa'] = $this->db->query("select * from mahasiswa mhs, jurusan jrs where mhs.nama_jurusan=jrs.nama_jurusan and mhs.id='$id'")->result();
         $data['jurusan'] = $this->jurusan_model->tampil_data('jurusan')->result();
         $data['detail'] = $this->mahasiswa_model->ambil_id_mahasiswa($id);
-
         $this->load->view('template/header', $data);
         $this->load->view('admin/mahasiswa_update', $data);
         $this->load->view('template/footer');
@@ -293,7 +292,7 @@ class Admin extends CI_Controller
 
             $this->mahasiswa_model->update_data($where, $data, 'mahasiswa');
             $this->session->set_flashdata('pesan', '<div class="bs-toast toast toast-placement-ex m-2 fade bg-info top-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
-                                                        <div class="toast-header">
+            <div class="toast-header">
                                                             <div class="me-auto fw-semibold">
                                                                 <i class="fas fa-bell"></i>
                                                                 Pemberitahuan
@@ -325,7 +324,7 @@ class Admin extends CI_Controller
     {
 
         $this->_rulesJurusan();
-        
+
         if ($this->form_validation->run() == FALSE) {
             $this->jurusan();
         }else {
@@ -333,72 +332,48 @@ class Admin extends CI_Controller
                 'kode_jurusan' => $this->input->post('kode_jurusan', TRUE),
                 'nama_jurusan' => $this->input->post('nama_jurusan', TRUE)
             );
-            
+
             $this->jurusan_model->input_data($data);
             // $this->db->insert('jurusan', [
-                //     'kode_jurusan' => $this->input->post('kode_jurusan'),
-                //     'nama_jurusan' => $this->input->post('nama_jurusan'),
-                // ]);
-                $this->session->set_flashdata('pesan', '<div class="bs-toast toast toast-placement-ex m-2 fade bg-success top-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
-                <div class="toast-header">
-                <div class="me-auto fw-semibold">
-                <i class="fas fa-bell"></i>
-                                                                Pemberitahuan
-                                                                </div>
+            //     'kode_jurusan' => $this->input->post('kode_jurusan'),
+            //     'nama_jurusan' => $this->input->post('nama_jurusan'),
+            // ]);
+            $this->session->set_flashdata('pesan', '<div class="bs-toast toast toast-placement-ex m-2 fade bg-success top-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+                                                        <div class="toast-header">
+                                                        <div class="me-auto fw-semibold">
+                                                        <i class="fas fa-bell"></i>
+                                                        Pemberitahuan
+                                                            </div>
                                                                 <small>1 mins ago</small>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                                                         </div>
                                                         <div class="toast-body">
-                                                        Data berhasil ditambahkan.
-                                                        </div>
+                                                                Data berhasil ditambahkan.
+                                                            </div>
                                                     </div>');
             redirect('admin/jurusan');
         }
     }
-    
-    public function _rulesJurusan()
-    {
-        $this->form_validation->set_rules('kode_jurusan', 'kode_jurusan', 'required', ['required' => 'Kode jurusan harus diisi!']);
-        $this->form_validation->set_rules('nama_jurusan', 'nama_jurusan', 'required', ['required' => 'Nama jurusan harus diisi!']);
-    }
 
     public function update_jurusan($id_jurusan)
     {
-        $data['title'] = 'Update Jurusan';
+        $where = array('id' => $id_jurusan);
+        $data['title'] = 'Jurusan';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();        
         $data['user_role'] = $this->db->get_where('user_role', ['role' => $this->session->userdata('role')])->row_array();
-        $data['jurusan'] = $this->jurusan_model->ambil_id_jurusan($id_jurusan);
+        $data['jurusan'] = $this->jurusan_model->tampil_data()->result();
+        $data['detail'] = $this->jurusan_model->ambil_id_jurusan($id_jurusan);
+
         
         $this->load->view('template/header', $data);
         $this->load->view('admin/jurusan_update', $data);
         $this->load->view('template/footer');
     }
 
-    public function jurusan_update_aksi()
+    public function _rulesJurusan()
     {
-        $id_jurusan = $this->input->post('id_jurusan');
-        $kode_jurusan = $this->input->post('kode_jurusan');
-        $nama_jurusan = $this->input->post('nama_jurusan');
-
-        $data = array(
-            'kode_jurusan' => $kode_jurusan,
-            'nama_jurusan' => $nama_jurusan
-        );
-        
-        $where = array(
-            'id_jurusan' => $id_jurusan
-        );
-
-        // Debugging
-        $result = $this->jurusan_model->update_data($where, $data, 'jurusan');
-        log_message('debug', 'Update result: ' . $result);
-
-        $this->session->set_flashdata('pesan', '<div class="alert alert-default-success alert-dismissible"
-                                                    role=""alert><button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span></button>
-                                                        Data <strong>Jurusan</strong> berhasil diubah!
-                                                    </div>');
-        redirect('admin/jurusan');
+        $this->form_validation->set_rules('kode_jurusan', 'kode_jurusan', 'required', ['required' => 'Kode jurusan harus diisi!']);
+        $this->form_validation->set_rules('nama_jurusan', 'nama_jurusan', 'required', ['required' => 'Nama jurusan harus diisi!']);
     }
 
     public function delete_jurusan($id_jurusan)
