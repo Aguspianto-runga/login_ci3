@@ -56,10 +56,22 @@ class User extends CI_Controller
         } else{
             $name = $this->input->post('name');
             $email = $this->input->post('email');
+            $image = $_FILES['image']['name'];//agar foto lama tdk terhapus
 
-            $this->db->set('name', $name);
-            $this->db->where('email', $email);
-            $this->db->update('user');
+            // $this->db->set('name', $name);
+            // $this->db->set('image', $image);
+            // $this->db->where('email', $email);
+            // $this->db->update('user');
+            $data = array(
+                'name' => $name,
+                'image' => $image
+            );
+
+            $where = array(
+                'email' => $email
+            );
+
+            $this->user_model->update_data($where, $data, 'user');
             
             $this->session->set_flashdata('pesan', '<div class="bs-toast toast toast-placement-ex m-2 fade bg-success top-0 end-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
                                                         <div class="toast-header">
@@ -116,5 +128,8 @@ class User extends CI_Controller
         $this->load->view('user/changepassword', $data);
         $this->load->view('template/footer');
     }
+
+
+
 }
 
